@@ -15,9 +15,7 @@ namespace App.Core
             if currentScene <> invalid then currentScene.visible = false
 
             sceneObj = createObject("roSGNode", sceneName)
-            print "sceneName "; sceneName
-            
-            print "sceneObj "; sceneObj
+
             sceneObj.observeField("visible", "screenShow")
             sceneObj.observeField("focusedChild", "onFocus")
             if sceneObj <> invalid
