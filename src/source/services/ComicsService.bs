@@ -1,0 +1,8 @@
+import "pkg:/source/utils/Promise.bs"
+
+import "BaseService.bs"
+
+
+Function getComics(callback as Function)
+
+End Function

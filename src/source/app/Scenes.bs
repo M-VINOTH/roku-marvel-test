@@ -1,0 +1,9 @@
+namespace App.Core
+
+    enum SCENES
+        HOME_SCENE = "HomeScene"
+        DETAIL_SCENE = "DetailScene"
+        PLAYER_SCENE = "PlayerScene"
+    end enum
+
+end namespace

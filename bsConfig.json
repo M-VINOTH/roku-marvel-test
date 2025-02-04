@@ -1,0 +1,21 @@
+{
+    // the monorepo retains the staging dir for caching purposes
+    "retainStagingDir": true,
+    // disable automatic package creation as heft manually packages apps to support merge-configs
+    "createPackage": false,
+    // compiler information
+    "sourceMap": false,
+    "emitDefinitions": true,
+    "enableTypeValidation": true,
+    "diagnosticFilters": [
+        "node_modules/**/*"
+    ],
+    "files": [
+        "**/*.*",
+        "manifest"
+    ],
+    // define folders explicitly
+    "rootDir": "src",
+    "stagingDir": "build",
+    "outFile": "out/app.zip"
+}

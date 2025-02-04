@@ -1,0 +1,35 @@
+namespace App.utils
+
+    class Fonts
+
+        _fonts = {}
+
+        sub new()
+            
+        end sub
+
+        function get(fontType as App.utils.FontTypes,  size as integer)as object
+            fontId = fontType + "_" + size.toStr()
+            if m._fonts.doesExit(fontId) then return m._fonts[fontId]
+            
+            font = CreateObject("roSGNode","Font")
+            font.uri = fontType
+            font.size = size
+            
+            m._fonts.addReplace(fontId, font)
+
+            return font
+        end function
+
+    end class
+
+    Enum FontTypes
+    
+        BOLT  = "pkg:/resources/fonts/ProximaNova-Bold.otf"
+        LIGHT = "pkg:/resources/fonts/ProximaNova-Light.otf"
+        REGULAR =  "pkg:/resources/fonts/ProximaNova-Regular.otf"
+        SEMI_BOLD = "pkg:/resources/fonts/ProximaNova-Semibold.otf"
+    
+    End Enum
+
+end namespace

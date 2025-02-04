@@ -1,0 +1,36 @@
+sub init()
+    print "HOMEScENE"
+    m.viewModel = new App.viewModel.Home()
+end sub
+
+sub _onInputChange()
+end sub
+
+
+sub _screenShow()
+    m.viewModel.screenShow()
+end sub
+
+sub _screenHide()
+    m.viewModel.screenHide()
+end sub
+
+sub _onFocus()
+    m.viewModel.setFocus()
+end sub
+
+
+sub _dispose()
+    m.viewModel.dispose()
+end sub
+
+
+function onKeyEvent(key as string, press as boolean)as boolean
+    handled = false
+    handled = m.viewModel.onKeyEvent(key, press)
+    return handled
+end function
+
+'Input from View Model
+sub onUpdateView(payload as object)
+end sub

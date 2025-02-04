@@ -1,0 +1,163 @@
+function createTaskPromise(taskName as string, fields = invalid as object, returnSignalFieldValue = false as boolean, signalField = "output" as string, context = "__INVALID__" as object) as object
+    task = CreateObject("roSGNode", taskName)
+    if fields <> invalid then task.update(fields)
+    promise = createPromiseFromNode(task, returnSignalFieldValue, signalField, context)
+    task.control = "run"
+    return promise
+end function
+
+function createResolvedPromise(value as dynamic, delay = 0.01 as float, context = "__INVALID__" as object) as dynamic
+    timer = CreateObject("roSGNode", "Timer")
+    timer.duration = delay
+    timer.repeat = false
+    promise = createPromiseFromNode(timer, false, "fire", context)
+    promise.value = value
+    timer.control = "start"
+    return promise
+end function
+
+function createObservablePromise(signalFieldType = "assocarray" as string, fields = invalid as object, returnSignalFieldValue = false as boolean, signalField = "output" as string) as object
+    node = CreateObject("roSGNode", "Node")
+    if fields <> invalid then node.addFields(fields)
+    node.addField(signalField, signalFieldType, false)
+    promise = createPromiseFromNode(node, returnSignalFieldValue, signalField)
+    return promise
+end function
+
+function createManualPromise() as object
+    promise = __createPromise()
+    promise.resolve = sub(value as object)
+        m.context[m.id + "_callback"](value)
+        m.complete = true
+    end sub
+    return promise
+end function
+
+function createOnAnimationCompletePromise(animation as object, startAnimation = true as boolean, unparentNode = true as boolean) as object
+    promise = createPromiseFromNode(animation, false, "state")
+    promise.shouldSendCallback = function(node as object) as boolean
+        if node.state = "stopped" then return true
+        return false
+    end function
+    promise.unparent = unparentNode
+
+    if startAnimation then animation.control = "start"
+    return promise
+end function
+
+function createPromiseFromNode(node as object, returnSignalFieldValue as boolean, signalField as string, context = "__INVALID__" as object, disableDispose = false as boolean) as object
+    promise = __createPromise(context)
+    promiseField = "promise_" + signalField
+    if not node.doesExist(promiseField)
+        node.addField(promiseField, "array", false)
+        node.setField(promiseField, [])
+        node.observeFieldScoped(signalField, "__nodePromiseResolvedHandler")
+    end if
+    ids = node[promiseField]
+    ids.push(promise.id)
+    node.setField(promiseField, ids)
+    promise.signalField = signalField
+    promise.node = node
+    promise.disableDispose = disableDispose
+    promise.returnSignalFieldValue = returnSignalFieldValue
+    return promise
+end function
+
+'---------------------------------------------------------------------
+' Everything below here is private and should not be called directly.
+'---------------------------------------------------------------------
+
+function __createPromise(context = "__INVALID__" as object) as object
+    id = StrI(rnd(2147483647), 36)
+    promise = {
+        then: sub(callback as function)
+            m.context[m.id + "_callback"] = callback
+        end sub,
+
+        dispose: sub()
+            if not m.doesExist("context") then return ' already disposed
+            m.context.delete(m.id + "_callback")
+            m.context.delete(m.id)
+            m.delete("context")
+            if m.doesExist("node")
+                m.node.delete("promise_" + m.signalField)
+                m.node.unObserveFieldScoped(m.signalField)
+                m.delete("node")
+                m.delete(m.id)
+            end if
+        end sub
+    }
+    if type(context) = "roString" and context = "__INVALID__"
+        promise.context = m
+        promise.returnCustomContext = false
+    else
+        promise.context = m
+        promise.customContext = context
+        promise.returnCustomContext = true
+    end if
+
+    promise.id = id
+    promise.complete = false
+    m[id] = promise
+    return promise
+end function
+
+sub __nodePromiseResolvedHandler(e as object)
+    node = e.getRoSGNode()
+    field = e.getField()
+
+    ids = node["promise_" + field]
+
+    for each id in ids
+        promise = m[id]
+
+        isFunction = function(value as object) as boolean
+            valueType = type(value)
+            return (valueType = "roFunction") or (valueType = "Function")
+        end function
+
+        if isFunction(promise.shouldSendCallback) and promise.shouldSendCallback(node) = false then continue for
+
+        callback = promise.context[id + "_callback"]
+        if isFunction(callback)
+            if promise.returnSignalFieldValue = true
+                if promise.returnCustomContext = true
+                    callback(promise.node[promise.signalField], promise.customContext)
+                else
+                    callback(promise.node[promise.signalField])
+                end if
+
+            else if promise.doesExist("value")
+                if promise.returnCustomContext = true
+                    callback(promise.value, promise.customContext)
+                else
+                    callback(promise.value)
+                end if
+                promise.delete("value")
+            else
+
+                if promise.returnCustomContext = true
+                    callback(promise.node, promise.customContext)
+                else
+                    callback(promise.node)
+                end if
+
+
+            end if
+        end if
+
+        if promise.disableDispose <> invalid and promise.disableDispose then continue for
+
+        'clean up properly properly
+        if promise.suppressDispose = invalid
+            promise.dispose()
+        end if
+
+        promise.complete = true
+
+        if promise.unparent = true
+            parent = node.getParent()
+            if parent <> invalid then parent.removeChild(node)
+        end if
+    end for
+end sub

@@ -1,0 +1,40 @@
+import "BaseViewModel.bs"
+
+namespace App.ViewModel
+
+    class Home extends App.ViewModel.Base
+
+        sub new()
+            super()
+            m.fetchComics()
+        end sub
+
+        sub setFocus()
+        end sub
+
+        sub screenShow()
+        end sub
+
+        sub screenHide()
+        end sub
+
+        sub dispose()
+        end sub
+
+        private sub fetchComics()
+            createTaskPromise("ServiceTask", 
+                { runFunction: "fetchComics" }, 
+                true, 
+                "response", 
+                m
+            ).then(m.onReceivedComicsResponse)
+        end sub
+
+        private sub onReceivedComicsResponse(response as object, context as object)
+            m = context
+            print "onReceivedComicsResponse"; response
+        end sub
+
+    end class
+
+end namespace

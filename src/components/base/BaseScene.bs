@@ -1,0 +1,56 @@
+sub init()
+    m.router = App.Core.ROUTER(m.top)
+end sub
+
+sub screenShow()
+    if m.top.visible
+        _screenShow()
+    else
+        screenHide()
+    end if
+end sub
+
+sub screenHide()
+    _screenHide()
+end sub
+
+sub onFocus()
+    if m.top.hasFocus()
+        _onFocus()
+    end if
+end sub
+
+sub dispose()
+    _dispose()
+end sub
+
+sub navigate(sceneName as App.Core.SCENES, payload = {} as object)
+    m.router.navigateTo(sceneName, payload)
+end sub
+
+sub back()
+    m.router.goBack()
+end sub
+
+'_screenShow()
+sub _screenShow()
+     throw "_screenShow must be implemented by the class extending Base Scene"
+end sub
+
+
+'_screenHide()
+sub _screenHide()
+    throw "_screenHide must be implemented by the class extending Base Scene"
+end sub
+
+
+'_screenHide()
+sub _dispose()
+    throw "_dispose must be implemented by the class extending Base Scene"
+end sub
+
+
+'_onFocus()
+sub _onFocus()
+    throw "_onFocus must be implemented by the class extending Base Scene"
+end sub

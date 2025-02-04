@@ -1,0 +1,53 @@
+sub init()
+    m.baseURI = "https://gateway.marvel.com/v1/public/"
+end sub
+
+'************
+'- Function Name:  ``onRunFunctionUpdated``
+'- Params:  event as object
+' **Description: Here will get a function to run specific task
+'************
+sub onRunFunctionUpdated(event as object)
+    m.top.functionName = event.getData()
+end sub
+
+'************
+'- Function Name:  ``fetchComics``
+'************
+sub fetchComics()
+    url = m.baseURI+"comics"+ getQuery()
+    response = baseService().get(url)
+    m.top["response"] = response
+end sub
+
+'************
+'- Function Name:  ``fetchCharacters``
+'************
+sub fetchCharacters()
+    comicsId = m.top.data.comicsId
+    url = m.baseURI+"comics/"+comicsId+"/characters" + getQuery()
+    response = baseService().get(url)
+    m.top["response"] = response
+end sub
+
+'************
+'- Function Name:  ``getQuery``
+'************
+function getQuery() as string
+    ts = CreateObject("roDateTime").AsSeconds()
+
+    publickey =  "a9629cc84750d1a6fdd0a4e549dce33c"
+    privatekey= "208fe2bd66a15714c6409f1cc1713f04fcdb79a1"
+
+    return "?ts="+ts.tostr()+"&apikey="+publickey+"&hash="+ getHash(ts.tostr() + privatekey + publickey)
+end function
+
+
+function getHash(stringValue as string) as string
+    ba = CreateObject("roByteArray")
+    ba.FromAsciiString(stringValue)
+    digest = CreateObject("roEVPDigest")
+    digest.setup("md5")
+    result = digest.process(ba)
+    return result
+end function

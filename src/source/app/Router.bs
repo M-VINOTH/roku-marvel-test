@@ -1,0 +1,68 @@
+import "Scenes.bs"
+
+namespace App.Core
+
+    class Router
+
+        private _mainScene = invalid
+
+        sub new(scene as object)
+            m._mainScene = scene
+        end sub
+
+        sub navigateTo(sceneName as App.Core.SCENES, initData = {} as dynamic)
+            currentScene = m._mainScene.screenStack.Peek()
+            if currentScene <> invalid then currentScene.visible = false
+
+            sceneObj = createObject("roSGNode", sceneName)
+            print "sceneName "; sceneName
+            
+            print "sceneObj "; sceneObj
+            sceneObj.observeField("visible", "screenShow")
+            sceneObj.observeField("focusedChild", "onFocus")
+            if sceneObj <> invalid
+                sceneObj.initData = initData
+                sceneObj.visible = true
+                m.pushToScreenStack(sceneObj)
+                m._mainScene.appendChild(sceneObj)
+                sceneObj.setFocus(true)
+            else
+                print `Looks Like ${sceneName} is invalid`
+            end if
+        end sub
+
+        sub goBack()
+            currentScene = m.popScreenStack() ' Remove the current Scene from top
+            if currentScene <> invalid
+                currentScene.visible = false
+                m._mainScene.removeChildren(currentScene)
+            end if
+
+            previousScene = m._mainScene.screenStack.Peek()
+            if previousScene <> invalid
+                previousScene.visible = true
+                previousScene.setFocus(true)
+            end if
+            currentScene.callFunc("dispose")
+        end sub
+
+        '******************************************************
+        ' Private Methods
+        '******************************************************
+        
+        private sub pushToScreenStack(currentScene as object)
+            screenStack = m._mainScene.screenStack
+            screenStack.push(currentScene)
+            m._mainScene.addReplace("screenStack", screenStack)
+        end sub
+
+        private function popScreenStack() as dynamic
+            screenStack = m._mainScene.screenStack
+            previousObj = screenStack.pop()
+            m._mainScene.addReplace("screenStack", screenStack)
+            return previousObj
+        end function
+
+    end class
+
+end namespace

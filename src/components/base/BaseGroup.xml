@@ -1,0 +1,10 @@
+<component name="BaseGroup" extends="Group">
+    <script type="text/brightscript" uri="BaseGroup.bs" />
+    <script type="text/brightscript" uri="pkg:/source/app/Router.bs" />
+
+    <interface>
+        <function name="dispose"/>
+
+        <field id="initData" type="assocArray" onChange="onInputChange" />
+    </interface>
+</component>
