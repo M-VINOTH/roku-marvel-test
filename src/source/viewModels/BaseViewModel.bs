@@ -2,7 +2,13 @@ import "pkg:/source/utils/Promise.bs"
 namespace App.ViewModel
 
     class Base
-        sub new()
+
+        top as object
+        router as object
+        
+        sub new(top as object)
+            m.top = top
+            m.router = App.Core.ROUTER(top.getScene())
         end sub
     end class
     

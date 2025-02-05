@@ -1,15 +1,19 @@
 import "BaseViewModel.bs"
+import "../models/HomeModel.bs"
 
 namespace App.ViewModel
 
     class Home extends App.ViewModel.Base
 
-        sub new()
-            super()
+        model as App.Model.Home
+
+        sub new(top as object)
+            super(top)
             m.fetchComics()
         end sub
 
         sub setFocus()
+
         end sub
 
         sub screenShow()
@@ -20,6 +24,21 @@ namespace App.ViewModel
 
         sub dispose()
         end sub
+
+        sub onSelectComicsIndex(index as object)
+            selectedItem = m.model.getCosmicItem(index)
+            'Most of the comics are returning 404 so returning to player from home page
+
+            ' m.router.navigateTo(App.Core.SCENES.DETAIL_SCENE, {payload: selectedItem})
+            
+            m.router.navigateTo(App.Core.SCENES.PLAYER_SCENE)
+
+        end sub
+
+        function onKeyEvent(key as string, press as boolean)as boolean
+            return true
+        end function
+
 
         private sub fetchComics()
             createTaskPromise("ServiceTask", 
@@ -32,7 +51,8 @@ namespace App.ViewModel
 
         private sub onReceivedComicsResponse(response as object, context as object)
             m = context
-            print "onReceivedComicsResponse"; response
+            m.model = new App.Model.Home(response)
+            m.top.callFunc("onUpdateView", m.model.getContentMetaData())
         end sub
 
     end class

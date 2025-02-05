@@ -10,7 +10,7 @@ namespace App.utils
 
         function get(fontType as App.utils.FontTypes,  size as integer)as object
             fontId = fontType + "_" + size.toStr()
-            if m._fonts.doesExit(fontId) then return m._fonts[fontId]
+            if m._fonts.doesExist(fontId) then return m._fonts[fontId]
             
             font = CreateObject("roSGNode","Font")
             font.uri = fontType

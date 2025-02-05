@@ -1,0 +1,38 @@
+import "BaseModel.bs"
+
+namespace App.Model
+
+   class Player extends App.Model.Base
+
+    videoContent as object
+    
+    sub new()
+        super()
+
+    end sub
+
+    function getVideoContent()
+        videoContent = CreateObject("roSGNode","ContentNode")
+        videoContent.title = "Roku MArvel TestVideo"
+        isDRM = false
+
+        if isDRM
+            videoContent.url = "https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd"
+            videoContent.streamformat = "dash"
+
+            videoContent.drmParams = {
+                keySystem: "widevine"
+                licenseServerURL: "https://proxy.uat.widevine.com/proxy?provider=widevine_test"
+            }
+        else
+            videoContent.url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            videoContent.streamformat = "mp4"
+        end if
+        
+        return videoContent
+    end function
+
+
+   end class
+    
+end namespace

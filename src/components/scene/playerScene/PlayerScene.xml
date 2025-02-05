@@ -1,0 +1,15 @@
+<component name="PlayerScene" extends="BaseGroup">
+    
+    <script type="text/brightscript" uri="PlayerScene.bs" />
+    <script type="text/brightscript" uri="styles.bs" />
+    <script type="text/brightscript" uri="pkg:/source/viewModels/PlayerViewModel.bs" />
+
+    <interface>
+       <function name="onUpdateView"/>
+    </interface>
+
+    <children>
+        <Video id="player" />
+    </children>
+    
+</component>

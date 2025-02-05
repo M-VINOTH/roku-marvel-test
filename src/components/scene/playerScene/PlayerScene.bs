@@ -1,0 +1,46 @@
+sub init()
+    m.player = m.top.findNode("player")
+
+    m.viewModel = new App.viewModel.Player(m.top)
+
+    
+    _setStyle()
+end sub
+
+sub _setStyle()
+    styles = getVideoPlayerStyle()
+    m.player.setFields(styles.player)
+end sub
+
+
+sub onUpdateView(videContent as object)
+    m.player.content = videContent
+    m.player.control = "play"
+end sub
+
+
+'_onInputChange()
+sub _onInputChange(input as object)
+end sub
+
+'_screenShow()
+sub _screenShow()
+     
+end sub
+
+'_screenHide()
+sub _screenHide()
+   
+end sub
+
+
+'_screenHide()
+sub _dispose()
+    
+end sub
+
+
+'_onFocus()
+sub _onFocus()
+    
+end sub

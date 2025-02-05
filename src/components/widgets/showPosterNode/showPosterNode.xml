@@ -1,0 +1,12 @@
+<component name="showPosterNode" extends="Group">
+    <script type="text/brightscript" uri="showPosterNode.brs" />
+    <script type="text/brightscript" uri="Styles.brs" />
+    <interface>
+        <field id="itemContent" type="node" onChange="onUpdateContent" />
+        <field id="focusPercent" type="float" onChange="onChangeFocus" />
+    </interface>
+
+    <children>
+        <Poster id="posterImage"/>
+    </children>
+</component>

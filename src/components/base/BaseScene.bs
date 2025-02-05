@@ -1,4 +1,5 @@
 sub init()
+    m.top.backgroundColor = "#000000"
     m.router = App.Core.ROUTER(m.top)
 end sub
 

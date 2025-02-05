@@ -1,0 +1,28 @@
+<component name="DetailScene" extends="BaseGroup">
+
+    <script type="text/brightscript" uri="DetailScene.bs" />
+    <script type="text/brightscript" uri="Styles.bs" />
+    <script type="text/brightscript" uri="pkg:/source/viewModels/DetailViewModel.bs" />
+
+
+    <interface>
+
+        <function name="onUpdateView"/>
+
+    </interface>
+
+    <children>
+        <Poster id="showPoster"/>
+        <LayoutGroup id="showInfoGroup">
+            <ScrollingLabel id="showTitle"/>
+            <Label id="sessionInfoLabel"/>
+            <Label id="showDescription"/>
+            
+        </LayoutGroup>
+        
+
+        <LayoutGroup id="bottomGroup">
+            <Markupgrid id="episodeGrid"/>
+        </LayoutGroup>
+    </children>
+</component>

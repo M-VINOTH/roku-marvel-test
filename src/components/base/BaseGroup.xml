@@ -1,5 +1,6 @@
 <component name="BaseGroup" extends="Group">
     <script type="text/brightscript" uri="BaseGroup.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/Fonts.bs" />
     <script type="text/brightscript" uri="pkg:/source/app/Router.bs" />
 
     <interface>

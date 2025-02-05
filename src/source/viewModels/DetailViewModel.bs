@@ -1,0 +1,52 @@
+import "BaseViewModel.bs"
+import "../models/DetailModel.bs"
+
+namespace App.ViewModel
+
+    class Detail extends App.ViewModel.Base
+
+        model as App.Model.Detail
+
+        sub new(top as object)
+            super(top)
+        end sub
+
+        sub setFocus()
+        end sub
+
+        sub screenShow()
+        end sub
+
+        sub screenHide()
+        end sub
+
+        sub dispose()
+        end sub
+
+        function onKeyEvent(key as string, press as boolean)as boolean
+            if key = "back"
+                m.router.goBack()
+            end if
+            return true
+        end function
+
+
+        sub fetchCharacter(payload as object)
+            createTaskPromise("ServiceTask", 
+                { runFunction: "fetchCharacters" , data: {comicsId: payload.id}}, 
+                true, 
+                "response", 
+                m
+            ).then(m.onReceivedCreatorsResponse)
+        end sub
+
+        private sub onReceivedCreatorsResponse(response as object, context as object)
+            m = context
+            print "onReceivedCreatorsResponse "; formatJson(response)
+            ' m.model = new App.Model.Detail(response)
+            ' m.top.callFunc("onUpdateView", m.model.getContentMetaData())
+        end sub
+
+    end class
+
+end namespace

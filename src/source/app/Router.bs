@@ -16,6 +16,7 @@ namespace App.Core
 
             sceneObj = createObject("roSGNode", sceneName)
 
+
             sceneObj.observeField("visible", "screenShow")
             sceneObj.observeField("focusedChild", "onFocus")
             if sceneObj <> invalid

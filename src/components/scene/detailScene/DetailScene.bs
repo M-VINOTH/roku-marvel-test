@@ -1,0 +1,94 @@
+sub init()
+
+    m.viewModel = new App.viewModel.Detail(m.top)
+
+    m.spinner = m.top.findNode("spinner")
+    
+    m.bottomGroup = m.top.findNode("bottomGroup")
+    m.seasonNumberGrid = m.top.findNode("seasonNumberGrid")
+    m.episodeGrid = m.top.findNode("episodeGrid")
+    
+    m.showInfoGroup = m.top.findNode("showInfoGroup")
+    m.sessionInfoLabel = m.top.findNode("sessionInfoLabel")
+
+    m.showPoster = m.top.findNode("showPoster")
+    m.showDescription = m.top.findNode("showDescription")
+    m.showTitle = m.top.findNode("showTitle")
+   
+    m.episodeGrid.observeField("itemSelected", "onSelectEpisode")
+    m.episodeGrid.observeField("itemFocused", "onEpisodeFocused")
+
+    _setStyle()
+end sub
+
+
+
+'************
+'- Function Name:  ``_setStyle``
+' **Description:
+'************
+sub _setStyle()
+    styles = getShowDetailStyle()
+    m.episodeGrid.setFields(styles.episodeGrid)
+    m.bottomGroup.setFields(styles.bottomGroup)
+    m.showPoster.setFields(styles.showPoster)
+    m.showDescription.setFields(styles.showDescription)
+    m.showTitle.setFields(styles.showTitle)
+    m.showInfoGroup.setFields(styles.showInfoGroup)
+    m.sessionInfoLabel.setFields(styles.sessionInfoLabel)
+end sub
+
+
+sub _onInputChange(initData as object)
+    data = initData
+    print "detailScene::_onInputChange "; data.payload
+    m.viewModel.fetchCharacter(data.payload)
+end sub
+
+
+sub _screenShow()
+    m.viewModel.screenShow()
+end sub
+
+sub _screenHide()
+    m.viewModel.screenHide()
+end sub
+
+sub _onFocus()
+    m.viewModel.setFocus()
+end sub
+
+
+sub _dispose()
+    m.viewModel.dispose()
+end sub
+
+'************
+'- Function Name:  ``onUpdateView``
+'- Params: event as {App.Model.Detail}
+sub onUpdateView(event as object)
+    model = event.getData()
+    print "onUpdateView "; model
+
+
+    show = model.show
+    m.showPoster.uri = show.posterURL
+    m.showTitle.text = show.title
+    m.showDescription.text = show.description
+
+    m.episodeGrid.content = model.charactersContentNode
+    m.spinner.visible = false
+    if m.top.hasFocus() then m.episodeGrid.setFocus(true)
+end sub
+
+sub onSelectCharacter(event as object)
+    index = event.getData()
+    print "onSelectCharacter:index "; index
+end sub
+
+'************
+'- Function Name:  ``onkeyEvent``
+'************
+function onKeyEvent(key as string, press as boolean) as boolean
+    return m.viewModel.onKeyEvent(key, press)
+end function

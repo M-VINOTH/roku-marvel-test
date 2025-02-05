@@ -1,8 +1,13 @@
 <component name="HomeScene" extends="BaseGroup">
     <script type="text/brightscript" uri="HomeScene.bs" />
+    <script type="text/brightscript" uri="styles.bs" />
     <script type="text/brightscript" uri="pkg:/source/viewModels/HomeViewModel.bs" />
 
     <interface>
         <function name="onUpdateView"/>
     </interface>
+
+    <children>
+        <Markupgrid id="comicsGrid"/>
+    </children>
 </component>

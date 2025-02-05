@@ -1,11 +1,19 @@
 sub init()
     print "HOMEScENE"
-    m.viewModel = new App.viewModel.Home()
+    m.viewModel = new App.viewModel.Home(m.top)
+    m.comicsGrid = m.top.findNode("comicsGrid")
+    m.comicsGrid.observeField("itemSelected", "_onSelectComicsIndex")
+
+    _setStyle()
 end sub
 
-sub _onInputChange()
+sub _setStyle()
+    style = getHomeViewStyle()
+    m.comicsGrid.setFields(style.comicsGrid)
 end sub
 
+sub _onInputChange(initData as object)
+end sub
 
 sub _screenShow()
     m.viewModel.screenShow()
@@ -16,7 +24,10 @@ sub _screenHide()
 end sub
 
 sub _onFocus()
-    m.viewModel.setFocus()
+    print "home screne:setFocus "; m.top.hasFocus()
+    if m.top.hasFocus()
+        m.comicsGrid.setFocus(true)
+    end if
 end sub
 
 
@@ -25,6 +36,11 @@ sub _dispose()
 end sub
 
 
+sub _onSelectComicsIndex(event as object)
+    selectedIndex = event.getData()
+    m.viewModel.onSelectComicsIndex(selectedIndex)
+end sub
+
 function onKeyEvent(key as string, press as boolean)as boolean
     handled = false
     handled = m.viewModel.onKeyEvent(key, press)
@@ -32,5 +48,8 @@ function onKeyEvent(key as string, press as boolean)as boolean
 end function
 
 'Input from View Model
-sub onUpdateView(payload as object)
+sub onUpdateView(contentNode as object)
+    print "home view::onUpdateView "
+    m.comicsGrid.content = contentNode
+    m.comicsGrid.setFocus(true)
 end sub

@@ -1,9 +1,8 @@
 sub init()
-    m.router = App.Core.ROUTER(m.top.getScene())
 end sub
 
 sub onInputChange()
-    _onInputChange()
+    _onInputChange(m.top.initData)
 end sub
 
 sub screenShow()
@@ -37,7 +36,7 @@ sub back()
 end sub
 
 '_onInputChange()
-sub _onInputChange()
+sub _onInputChange(input as object)
     throw "_onInputChange must be implemented by the class extending Base group"
 end sub
 
